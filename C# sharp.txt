@@ -1,0 +1,88 @@
+﻿public class Program
+{
+    public static void Main(string[] args)
+    {
+        ExpenseTracker expenseTracker = new ExpenseTracker();
+
+        expenseTracker.RecordExpense("Dinner", 50.25m, "Food");
+        expenseTracker.RecordExpense("Gasoline", 30.50m, "Travel");
+
+        expenseTracker.CategorizeExpense("Dinner", "Restaurant");
+        expenseTracker.CategorizeExpense("Groceries", "Food");
+
+        expenseTracker.GenerateReport();
+
+        Console.ReadKey();
+    }
+}
+
+public class Expense
+{
+    private string description;
+    private decimal amount;
+    private string category;
+
+    public string Description { get { return description; } }
+    public decimal Amount { get { return amount; } }
+
+    // Adicionei o setter pra conseguir alterar a propriedade category
+    public string Category { get { return category; } set => category = value; }
+
+
+
+
+
+    public Expense(string Description, decimal Amount, string Category)
+    {
+        this.description = Description;
+        this.amount = Amount;
+        this.category = Category;
+    }
+    public override string ToString()
+    {
+        return $"Descriptio: {Description}, Amount:{Amount}, Category:{Category}";
+    }
+}
+
+public class ExpenseTracker
+{
+    private List<Expense> expenseList;
+
+    public ExpenseTracker()
+    {
+        expenseList = new List<Expense>();
+    }
+    public void RecordExpense(string Description, decimal Amount, string Category)
+    {
+        Console.WriteLine("Expense recorded successfully");
+        Expense obj = new Expense(Description, Amount, Category);
+        expenseList.Add(obj);
+
+    }
+    public void CategorizeExpense(string Description, string Category)
+    {
+        foreach (var expense in expenseList)
+        {
+            if (expense.Description.Equals(Description))
+            {
+                // Caso exista alguma expense com essa descricao, alteramos o valor da Categ
+                expense.Category = Category;
+                Console.WriteLine($"Expense '{Description}' categorized as '{Category}'");
+
+                // Precisamos retornar algo (no caso, nada..void) pq se encontrarmos a expense temos que finalizar o metodo
+                return;
+            }
+        }
+        // Se chegar ate aqui, ou seja, nao encontrou a expense, quer dizer que ela nao existe
+        // So chega ate aqui se nao executar a linha do return
+        Console.WriteLine($"Expense '{Description}' not found.");
+
+    }
+
+    public Expense GenerateReport()
+    {
+        Console.WriteLine("Expense report:");
+        Console.WriteLine(string.Join("\n", expenseList));
+        return null; ;
+    }
+}
